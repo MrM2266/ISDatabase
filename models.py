@@ -23,7 +23,7 @@ class Person(Base):
     name = Column(String)
     surname = Column(String)
     address = Column(String)
-    students = relationship("Student", backref = "person") #osoba je n studenty - mùe studovat více programù
+    students = relationship("Student", backref = "person") #osoba je n studenty - mÃ¹Å¾e studovat vÃ­ce programÃ¹
     
     lessons = relationship("Lesson", secondary = person_teaches)
     
@@ -47,7 +47,7 @@ def Student(Base):
     __tablename__ = "students"
     
     id = Column(Integer, primary_key = True)
-    program_id = Column(Integer, ForeignKey("Program.id")) #jeden program má n studentù
+    program_id = Column(Integer, ForeignKey("Program.id")) #jeden program mÃ¡ n studentÃ¹
     person_id = Column(Integer, ForeignKey("Person.id")) #jedna osoba je n studenty
     
 def Program(Base):
