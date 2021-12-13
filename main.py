@@ -21,8 +21,10 @@ mySession = GetSession(BaseSession)
 
 ClearMetadata(SQLBase, engine)
 CreateMetadata(SQLBase, engine)
-
 randomData.preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession)
+
+#vytvori dve oblasti a prida jim par budov
+randomData.test1(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession)
 
 
 CloseSession(mySession)

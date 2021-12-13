@@ -53,16 +53,18 @@ def preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel
     session.commit()
 
     studyPrograms = GetStudyPrograms()
+    studyProgramsIds = []
     for program in studyPrograms:
         programRecord = ProgramModel(name = program)
         session.add(programRecord)
-    session.commit()
+        session.commit()
+        studyProgramsIds.append(programRecord.id)
     
     def RandomizedStudents(faculty, studyGroup, count=10):
         for _ in range(count):
             student = randomUser(mod=faculty.name)
             personRecord = PersonModel(name = student["name"], surname = student["surname"], email = student["email"])
-            studentRecord = StudentModel()
+            studentRecord = StudentModel(program_id = random.choice(studyProgramsIds))
             personRecord.students.append(studentRecord)
             session.add(studentRecord)
             session.add(personRecord)
@@ -124,6 +126,7 @@ def preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel
 
 def test1(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession):
     #for testing only
+    """
     studentsGroup = GroupModel(name = "Studenti_UO")
     teachersGroup = GroupModel(name = "ucitele")
     departmentGroup = GroupModel(name = "K-209")
@@ -136,24 +139,32 @@ def test1(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, Subj
     studentsGroup.people.append(petr)
     adam.groups.append(teachersGroup)
     petr.groups.append(departmentGroup)
+    """
     
     area1 = AreaModel(name = "Kasarna Sumavska")
     area2 = AreaModel(name = "Kasarna Jana Babaka")
     building1 = BuildingModel(name = "jidelna")
     building2 = BuildingModel(name = "Katedra Informatiky")
     building3 = BuildingModel(name = "Brana KJB")
+    building4 = BuildingModel(name = "Katedra matematiky")
+    building5 = BuildingModel(name = "internat Chodska")
     
     
     area1.buildings.append(building1)
     area1.buildings.append(building2)
+    area1.buildings.append(building4)
+
     area2.buildings.append(building3)
+    area2.buildings.append(building5)
     
-    AddToSession(adam, mySession)
-    AddToSession(studentsGroup, mySession)
+    #AddToSession(adam, mySession)
+    #AddToSession(studentsGroup, mySession)
     AddToSession(area1, mySession)
     AddToSession(area2, mySession)
     AddToSession(building1, mySession)
     AddToSession(building2, mySession)
     AddToSession(building3, mySession)
+    AddToSession(building4, mySession)
+    AddToSession(building5, mySession)
     CommitSession(mySession)
  
