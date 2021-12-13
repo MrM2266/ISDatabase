@@ -237,17 +237,73 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
             areaRecord = session.query(AreaModel).get(parent.id)
             return areaRecord.buildings
 
-    """class Query(ObjectType):
+    class Query(ObjectType):
 
         #user = Field(User, id=ID(required=True))
         #group = Field(Group, id=ID(required=False, default_value=None), name=String(required=False, default_value=None))
-        person = Field(Person, id=ID(required=True))
+        person = Field(Person, id = ID(required=True))
+        lesson = Field(Lesson, id = ID(required=True))
+        student = Field(Student, id = ID(required=True))
+        program = Field(Program, id = ID(required=True))
+        group = Field(Group, id = ID(required=True))
+        subject = Field(Subject, id = ID(required=True))
+        semester = Field(Semester, id = ID(required=True))
+        grouptype = Field(GroupType, id = ID(required=True))
+        lessontype = Field(LessonType, id = ID(required=True))
+        room = Field(Room, id = ID(required=True))
+        building = Field(Building, id = ID(required=True))
+        area = Field(Area, id = ID(required=True))
 
         def resolve_person(root, info, id):
             session = extractSession(info)
             return session.query(PersonModel).get(id)
+        
+        def resolve_lesson(root, info, id):
+            session = extractSession(info)
+            return session.query(LessonModel).get(id)
+        
+        def resolve_student(root, info, id):
+            session = extractSession(info)
+            return session.query(StudentModel).get(id)
 
-        def resolve_user(root, info, id):
+        def resolve_program(root, info, id):
+            session = extractSession(info)
+            return session.query(ProgramModel).get(id)
+
+        def resolve_group(root, info, id):
+            session = extractSession(info)
+            return session.query(GroupModel).get(id)
+
+        def resolve_subject(root, info, id):
+            session = extractSession(info)
+            return session.query(SubjectModel).get(id)
+
+        def resolve_semester(root, info, id):
+            session = extractSession(info)
+            return session.query(SemesterModel).get(id)
+
+        def resolve_grouptype(root, info, id):
+            session = extractSession(info)
+            return session.query(GroupTypeModel).get(id)
+
+        def resolve_lessontype(root, info, id):
+            session = extractSession(info)
+            return session.query(LessonTypeModel).get(id)
+
+        def resolve_room(root, info, id):
+            session = extractSession(info)
+            return session.query(RoomModel).get(id)
+
+        def resolve_building(root, info, id):
+            session = extractSession(info)
+            return session.query(BuildingModel).get(id)
+
+        def resolve_area(root, info, id):
+            session = extractSession(info)
+            return session.query(AreaModel).get(id)
+
+
+        """def resolve_user(root, info, id):
             #return {'name': info.context.get('session'), 'id': id}
             #return {'name': info.context['session'], 'id': id}
             session = extractSession(info)
@@ -292,4 +348,8 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
 
 # ZEPTAT SE NA ROZDÍL MEZI 1N A MN PŘI ŘEŠENÍ RELACÍ V GRAPHQL
 # JAK U PROMĚNNÝCH TAK U FUNKCÍ
+
 # ZEPTAT SE NA ROZDÍL U FUNKCÍ(RESOLVE) A PROMĚNNÝCH MEZI 1->N A N->1
+
+# ZEPTAT SE NA lesson = Field(Lesson, id = ID(required=True)) JAK VĚDĚT CO JE REQUIRED 
+# CO NENÍ REQUIRED A PODLE ČEHO SKLÁDAT QUERIES
