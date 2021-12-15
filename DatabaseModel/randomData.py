@@ -172,8 +172,8 @@ def lekce(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, Subj
     cviceni = LessonTypeModel(name = "laboratorni cviceni")
     prednaska = LessonTypeModel(name = "prednaska na ucebne")
 
-    l1 = LessonModel(topic = "kokotina cviceni")
-    l2 = LessonModel(topic = "kokotina prednaska")
+    l1 = LessonModel(topic = "cviceni")
+    l2 = LessonModel(topic = "prednaska")
 
     cviceni.lessons.append(l1)
     prednaska.lessons.append(l2)
