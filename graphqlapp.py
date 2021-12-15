@@ -1,5 +1,3 @@
-from datetime import datetime
-from typing_extensions import Required
 from sqlalchemy.sql.sqltypes import DATE
 from graphene import ObjectType, String, Int, Field, ID, List, Date, DateTime, Mutation, Boolean
 from graphene import Schema as GSchema
@@ -7,7 +5,7 @@ from graphene import Schema as GSchema
 from starlette.graphql import GraphQLApp
 import graphene
 
-import DatabaseModel.models as Models
+from DatabaseModel.models import PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel
 
 from contextlib import contextmanager
 
@@ -24,7 +22,6 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
     assert callable(sessionFunc), "sessionFunc must be a function creating a session"
 
     session_scope = contextmanager(sessionFunc)
-    PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel = Models.GetModels()
 
     def extractSession(info):
         return info.context.get('session')
@@ -35,11 +32,11 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
         surname = String()
         address = String()
         email = String()
+
         #NM - PERSON - LESSON
         lessons = List(lambda: Lesson)
         #1N - PERSON - STUDENT
         students = List(lambda: Student)
-
         #NM - GROUP - PERSON
         groups = List(lambda: Group)
 
@@ -62,49 +59,52 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
         id = ID()
         date = Date()
         topic = String()
+
         #NM - PERSON - LESSON
         persons = List(Person)
         #1N - LESSONTYPE - LESSON
-        lessontypes = List(lambda: LessonType)
+        lessontype = Field(lambda: LessonType)
         #1N - ROOM - LESSON
-        rooms = List(lambda: Room)
+        room = Field(lambda: Room)
 
         def resolve_persons(parent, info):
             session = extractSession(info)
             lessonRecord = session.query(LessonModel).get(parent.id)
-            return lessonRecord.persons
+            return lessonRecord.people
 
-        def resolve_lessontypes(parent, info):
+        def resolve_lessontype(parent, info):
             session = extractSession(info)
             lessonRecord = session.query(LessonModel).get(parent.id)
-            return lessonRecord.lessontypes
+            return lessonRecord.lesson_type
 
-        def resolve_rooms(parent, info):
+        def resolve_room(parent, info):
             session = extractSession(info)
             lessonRecord = session.query(LessonModel).get(parent.id)
-            return lessonRecord.rooms
+            return lessonRecord.room
 
     class Student(ObjectType):
         id = ID()
+
         #1N - PROGRAM - STUDENT
-        programs = List(lambda: Program)
+        program = Field(lambda: Program)
         #1N - PERSON - STUDENT
-        persons = List(Person)
+        person = Field(Person) #student má jenom jednu osobu a ne list osob -> field
 
-        def resolve_programs(parent, info):
+        def resolve_program(parent, info):
             session = extractSession(info)
             studentRecord = session.query(StudentModel).get(parent.id)
-            return studentRecord.programs
+            return studentRecord.program
 
-        def resolve_persons(parent, info):
+        def resolve_person(parent, info):
             session = extractSession(info)
             studentRecord = session.query(StudentModel).get(parent.id)
-            return studentRecord.persons
+            return studentRecord.people
 
 
     class Program(ObjectType):
         id = ID()
         name = String()
+
         #1N - PROGRAM - STUDENT
         students = List(Student)
         #1N - PROGRAM - SUBJECT
@@ -123,46 +123,54 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
     class Group(ObjectType):
         id = ID()
         name = String()
+
         #NM - GROUP - PERSON
         persons = List(Person)
-
         #1N - GROUPTYPE - GROUP
-        grouptypes = List(lambda: GroupType)
+        grouptype = Field(lambda: GroupType)
 
         def resolve_persons(parent, info):
             session = extractSession(info)
             groupRecord = session.query(GroupModel).get(parent.id)
-            return groupRecord.persons
+            return groupRecord.people #tady dávám odkaz na tabulku z sqlalchemy
 
-        def resolve_grouptypes(parent, info):
+        def resolve_grouptype(parent, info):
             session = extractSession(info)
             groupRecord = session.query(GroupModel).get(parent.id)
-            return groupRecord.grouptypes
+            return groupRecord.group_type
 
     class Subject(ObjectType):
         id = ID()
         name = String()
+        
+        #1N -  PROGRAM - SUBJECT 
+        program = Field(Program)
         #1N - SUBJECT - LESSON
         lessons = List(Lesson)
-
         #1N - SEMESTER - SUBJECT
-        semesters = List(lambda: Semester)
+        semester = List(lambda: Semester)
+
+        def resolve_program(parent, info):
+            session = extractSession(info)
+            subjectRecord = session.query(SubjectModel).get(parent.id)
+            return subjectRecord.program
 
         def resolve_lessons(parent, info):
             session = extractSession(info)
             subjectRecord = session.query(SubjectModel).get(parent.id)
             return subjectRecord.lessons
 
-        def resolve_semesters(parent, info):
+        def resolve_semester(parent, info):
             session = extractSession(info)
             subjectRecord = session.query(SubjectModel).get(parent.id)
-            return subjectRecord.semesters
+            return subjectRecord.semester
 
     class Semester(ObjectType):
         id = ID()
         name = String()
         year = Int()
         number = Int()
+
         #1N - SEMESTER - SUBJECT
         subjects = List(Subject)
 
@@ -174,6 +182,7 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
     class GroupType(ObjectType):
         id = ID()
         name = String()
+
         #1N - GROUPTYPE - GROUP
         groups = List(Group)
 
@@ -185,6 +194,7 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
     class LessonType(ObjectType):
         id = ID()
         name = String()
+
         #1N - LESSONTYPE - LESSON
         lessons = List(Lesson)
 
@@ -196,11 +206,11 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
     class Room(ObjectType):
         id = ID()
         name = String()
+
         #1N - ROOM - LESSON
         lessons = List(Lesson)
-
         #1N - BUILDING - ROOM
-        buildings = List(lambda: Building)  # TŘEBA TADY 1 MÍSTNOST MŮŽE BÝT JENOM V JEDNÝ BUDOVĚ
+        building = Field(lambda: Building)  # TŘEBA TADY 1 MÍSTNOST MŮŽE BÝT JENOM V JEDNÝ BUDOVĚ
 
         def resolve_lessons(parent, info):
             session = extractSession(info)
@@ -210,25 +220,31 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
         def resolve_buildings(parent, info):
             session = extractSession(info)
             roomRecord = session.query(RoomModel).get(parent.id)
-            return roomRecord.buildings
+            return roomRecord.building
 
     class Building(ObjectType):
         id = ID()
         name = String()
+
         #1N - BUILDING - ROOM
         rooms = List(Room)
-
         #1N - AREA - BUILDING
-        areas = List(lambda: Area)
+        area = Field(lambda: Area)
 
         def resolve_rooms(parent, info):
             session = extractSession(info)
             buildingRecord = session.query(BuildingModel).get(parent.id)
             return buildingRecord.rooms
 
+        def resolve_area(parent, info):
+            session = extractSession(info)
+            buildingRecord = session.query(BuildingModel).get(parent.id)
+            return buildingRecord.area
+
     class Area(ObjectType):
         id = ID()
         name = String()
+        
         #1N - AREA - BUILDING
         buildings = List(Building)
 
@@ -343,7 +359,8 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
                 return await super().execute_async(*args, **newkwargs)
 
 
-    graphql_app = GraphQLApp(schema=localSchema(query=Query, mutation=Mutations))
+    #graphql_app = GraphQLApp(schema=localSchema(query=Query, mutation=Mutations))
+    graphql_app = GraphQLApp(schema=localSchema(query=Query))
     app.add_route(bindPoint, graphql_app)
 
 # ZEPTAT SE NA ROZDÍL MEZI 1N A MN PŘI ŘEŠENÍ RELACÍ V GRAPHQL

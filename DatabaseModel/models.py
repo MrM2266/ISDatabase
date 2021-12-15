@@ -1,6 +1,7 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, BigInteger, Integer, Date, ForeignKey, Sequence, Table
 from DatabaseModel import relationsFunctions as relations
+from DatabaseModel.sqlalchemyCore import SQLBase as Base, unitedSequence
 
 def CreateModels(Base, unitedSequence):
     class PersonModel(Base):
@@ -12,7 +13,6 @@ def CreateModels(Base, unitedSequence):
         address = Column(String)
         email = Column(String)
         #osoba je n studenty - může studovat více programů
-    
         
     class LessonModel(Base):
         __tablename__ = "lessons"
@@ -20,10 +20,6 @@ def CreateModels(Base, unitedSequence):
         id = Column(Integer, unitedSequence, primary_key = True, autoincrement=True)
         date = Column(Date)
         topic = Column(String)
-    
-        def __init__(self, date, topic):
-            self.date = date
-            self.topic = topic
         
     class StudentModel(Base):
         __tablename__ = "students"
@@ -107,3 +103,6 @@ def defineRelations(Base, unitedSequence):
 
 
     return PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel
+
+
+PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel = defineRelations(Base, unitedSequence)

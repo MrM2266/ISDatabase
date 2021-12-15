@@ -26,7 +26,7 @@ def defineRelation1N(TableA, TableB):
     tableAName = TableA.__tablename__
     tableBName = TableB.__tablename__
     tableANameSingular = TableA.__tablename__
-    if tableANameSingular[-1] == 's':
+    if tableANameSingular[-1] == 's': #pokud jmeno tabulky obsahuje na poslednim miste s - s se odebere - areas -> area
         tableANameSingular = tableANameSingular[:-1]
     
     setattr(TableB, f'{tableANameSingular}_id', Column(ForeignKey(f'{tableAName}.id')))

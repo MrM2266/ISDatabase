@@ -124,7 +124,7 @@ def preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel
     session.commit()
     session.close()
 
-def test1(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession):
+def buildings(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession):
     #for testing only
     """
     studentsGroup = GroupModel(name = "Studenti_UO")
@@ -168,3 +168,18 @@ def test1(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, Subj
     AddToSession(building5, mySession)
     CommitSession(mySession)
  
+def lekce(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession):
+    cviceni = LessonTypeModel(name = "laboratorni cviceni")
+    prednaska = LessonTypeModel(name = "prednaska na ucebne")
+
+    l1 = LessonModel(topic = "kokotina cviceni")
+    l2 = LessonModel(topic = "kokotina prednaska")
+
+    cviceni.lessons.append(l1)
+    prednaska.lessons.append(l2)
+
+    AddToSession(cviceni, mySession)
+    AddToSession(prednaska, mySession)
+    AddToSession(l1, mySession)
+    AddToSession(l2, mySession)
+    mySession.commit()
