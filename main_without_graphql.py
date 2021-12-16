@@ -1,35 +1,19 @@
-from sqlalchemy import Sequence
-
-from DatabaseModel import models
-from DatabaseModel.sqlalchemyCore import *
+from DatabaseModel.sqlalchemyCore import GetSession
 from DatabaseModel.myDevTools import *
 from DatabaseModel import randomData
+from DatabaseModel.models import PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel
 #from DatabaseModel import sqlalchemyCore #přístup do modulu přes tečku
 
-print("running from main")
-DATABASE_URI = "postgresql+psycopg2://postgres:password@host.docker.internal:5432/data"
+
+mySession = GetSession()
+
+ClearMetadata()
+CreateMetadata()
 
 
-unitedSequence = Sequence('all_id_seq')
-engine = GetEngine(DATABASE_URI)
-BaseSession = GetBaseSession(engine)
-SQLBase = GetDeclarativeBase()
-
-PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel = models.defineRelations(SQLBase, unitedSequence)
-
-mySession = GetSession(BaseSession)
-
-#ClearMetadata(SQLBase, engine)
-#CreateMetadata(SQLBase, engine)
-#randomData.preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession)
-
-#vytvori dve oblasti a prida jim par budov
-#randomData.buildings(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession)
-#randomData.lekce(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession)
-
-res = mySession.query(LessonModel).get(3)
-
-print(f"{res.lesson_type.name}")
+randomData.preloadData(mySession)
+randomData.buildings(mySession)
+randomData.lekce(mySession)
 
 
 CloseSession(mySession)

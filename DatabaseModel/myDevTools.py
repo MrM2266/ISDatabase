@@ -1,7 +1,9 @@
-def ClearMetadata(SQLBase, engineBindedToDb):
-    SQLBase.metadata.drop_all(engineBindedToDb)
+from DatabaseModel.sqlalchemyCore import SQLBase, engine
 
-def CreateMetadata(SQLBase, engine):
+def ClearMetadata():
+    SQLBase.metadata.drop_all(engine)
+
+def CreateMetadata():
     SQLBase.metadata.create_all(engine)
 
 def AddToSessionAndCommit(object, session):

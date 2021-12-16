@@ -22,7 +22,6 @@ def defineRelation11(TableA, TableB):
     return
 
 def defineRelation1N(TableA, TableB):
-
     tableAName = TableA.__tablename__
     tableBName = TableB.__tablename__
     tableANameSingular = TableA.__tablename__
@@ -32,7 +31,7 @@ def defineRelation1N(TableA, TableB):
     setattr(TableB, f'{tableANameSingular}_id', Column(ForeignKey(f'{tableAName}.id')))
     setattr(TableB, tableANameSingular, relationship(TableA, back_populates=f'{tableBName}'))
 
-    setattr(TableA, tableBName, relationship(TableB, back_populates=f'{tableANameSingular}')) #relationship(lazy='dynamic')
+    setattr(TableA, tableBName, relationship(TableB, back_populates=f'{tableANameSingular}'))
     return
 
 def defineRelationNM(TableA, TableB, sequence=Sequence('all_id_seq'), tableAItemName=None, tableBItemName=None):
@@ -48,7 +47,7 @@ def defineRelationNM(TableA, TableB, sequence=Sequence('all_id_seq'), tableAItem
         Column(f'{tableBName}_id', ForeignKey(f'{tableBName}.id'), primary_key=True)
     )
 
-    setattr(TableA, tableBName, relationship(TableB, secondary=interTable)) #relationship(lazy='dynamic')
-    setattr(TableB, tableAName, relationship(TableA, secondary=interTable))
+    setattr(TableA, tableBName, relationship(TableB, secondary=interTable, back_populates=tableAName))
+    setattr(TableB, tableAName, relationship(TableA, secondary=interTable, back_populates=tableBName))
 
     return

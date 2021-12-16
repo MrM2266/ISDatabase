@@ -1,6 +1,7 @@
 import random
 from DatabaseModel.models import *
 from DatabaseModel.myDevTools import *
+from DatabaseModel.models import PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel
 
 def randomUser(mod='main'):
     surNames = [
@@ -31,7 +32,8 @@ def GetStudyPrograms():
                "Zubni lekarstvi", "Pilot", "Ridici letoveho provozu"]
     return options
 
-def preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, session):
+def preloadData(session):
+    print("generating data - preloadData function")
     TypeFaculty = GroupTypeModel(name = "fakulta")
     TypeDepartment = GroupTypeModel(name = "katedra")
     TypeStudyGroup = GroupTypeModel(name = "studijni skupina")
@@ -124,8 +126,9 @@ def preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel
     session.commit()
     session.close()
 
-def buildings(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession):
-    #for testing only
+def buildings(mySession):
+    print("generating data - buildings function")
+
     """
     studentsGroup = GroupModel(name = "Studenti_UO")
     teachersGroup = GroupModel(name = "ucitele")
@@ -168,12 +171,13 @@ def buildings(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, 
     AddToSession(building5, mySession)
     CommitSession(mySession)
  
-def lekce(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession):
+def lekce(mySession):
+    print("generating data - lekce function")
     cviceni = LessonTypeModel(name = "laboratorni cviceni")
     prednaska = LessonTypeModel(name = "prednaska na ucebne")
 
-    l1 = LessonModel(topic = "cviceni")
-    l2 = LessonModel(topic = "prednaska")
+    l1 = LessonModel(topic = "lekce cviceni")
+    l2 = LessonModel(topic = "lekce prednaska")
 
     cviceni.lessons.append(l1)
     prednaska.lessons.append(l2)

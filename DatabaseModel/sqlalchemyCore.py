@@ -2,15 +2,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Sequence
-
 from functools import cache
 
+DATABASE_URI = "postgresql+psycopg2://postgres:password@host.docker.internal:5432/data"
 
 def GetBaseSession(engineToBind):
     baseS = sessionmaker(bind = engineToBind)
     return baseS
 
-def GetSession(BaseSession):
+def GetSession():
     newSession = BaseSession()
     return newSession
 
@@ -23,9 +23,11 @@ def GetDeclarativeBase():
     return declarative_base()
 
 @cache
-def GetUnitedSequence():
-    unitedSequence = Sequence('all_id_seq')
+def GetUnitedSequence(name):
+    seqName = name + "_id_seq"
+    unitedSequence = Sequence(seqName)
     return unitedSequence
 
 SQLBase = GetDeclarativeBase()
-unitedSequence = GetUnitedSequence()
+engine = GetEngine(DATABASE_URI)
+BaseSession = GetBaseSession(engine)

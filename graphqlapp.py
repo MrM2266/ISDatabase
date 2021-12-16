@@ -125,11 +125,11 @@ def attachGraphQL(app, sessionFunc, bindPoint='/gql'):
         name = String()
 
         #NM - GROUP - PERSON
-        persons = List(Person)
+        members = List(Person)
         #1N - GROUPTYPE - GROUP
         grouptype = Field(lambda: GroupType)
 
-        def resolve_persons(parent, info):
+        def resolve_members(parent, info):
             session = extractSession(info)
             groupRecord = session.query(GroupModel).get(parent.id)
             return groupRecord.people #tady dávám odkaz na tabulku z sqlalchemy

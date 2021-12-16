@@ -1,16 +1,13 @@
 from starlette.graphql import GraphQLApp
 
-from DatabaseModel.models import PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel
-from DatabaseModel.sqlalchemyCore import *
+from DatabaseModel.sqlalchemyCore import GetSession
 from DatabaseModel.myDevTools import *
 from DatabaseModel import randomData
-#from DatabaseModel import sqlalchemyCore #přístup do modulu přes tečku
+from DatabaseModel.models import PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel
 
 from fastapi import FastAPI
 import graphqlapp
 
-print("running from main")
-DATABASE_URI = "postgresql+psycopg2://postgres:password@host.docker.internal:5432/data"
 
 def buildApp(session):
     def prepareSession():#Session=Session): # default parameters are not allowed here
@@ -34,18 +31,17 @@ def buildApp(session):
     return app
 
 
-engine = GetEngine(DATABASE_URI) #initEngine
-BaseSession = GetBaseSession(engine)
 
+mySession = GetSession()
 
-
-mySession = GetSession(BaseSession) #initSession
-
-ClearMetadata(SQLBase, engine)
-CreateMetadata(SQLBase, engine)
-
-randomData.preloadData(PersonModel, LessonModel, StudentModel, ProgramModel, GroupModel, SubjectModel, SemesterModel, GroupTypeModel, LessonTypeModel, RoomModel, BuildingModel, AreaModel, mySession)
+ClearMetadata()
+CreateMetadata()
+randomData.preloadData(mySession)
+randomData.buildings(mySession)
+randomData.lekce(mySession)
 
 CloseSession(mySession)
 
-app = buildApp(mySession)
+gqlSession = GetSession()
+app = buildApp(gqlSession)
+CloseSession(gqlSession)
