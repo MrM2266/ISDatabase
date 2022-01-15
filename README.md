@@ -28,5 +28,5 @@ docker-compose up
 - only gql endpoint is available for other device outside of docker network - to access the GraphQL UI open http://localhost:82/gql on your device
 
 - in this version of our project the database is populated with random data (not all databse is populated - for testing purposes only)
-
+<br/><br/>
 -the GraphQl is going to be connected to router which will provide data exchange beetween other parts of our information system (see https://github.com/naxit-01/Bzatek-Nemec-2021)
