@@ -1,6 +1,6 @@
 # ISDatabase
 Database backend for university site. Project is based on SQLAlchemy and GraphQL.
-
+<br/><br/>
 This project contains only SQLAlchemy models and GraphQL endpoint to provide data from the postgres database running in separate container. To successfully start this application you need to have a running postgres database (for instance in docker container).
 
 There are two supported ways to startup the application:
