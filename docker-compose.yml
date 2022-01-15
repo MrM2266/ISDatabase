@@ -1,0 +1,19 @@
+version: "3.9"
+
+x-environment: &commonEnvironment
+  - POSTGRES_USER=gql
+  - POSTGRES_PASSWORD=heslo1234
+  - POSTGRES_DB=data
+
+services:
+  database:
+    image: postgres:13.2
+    restart: always
+    environment: *commonEnvironment
+  gql_entry_point:
+    image: "gql_core"
+    depends_on:
+      - database
+    environment: *commonEnvironment
+    ports:
+      - 82:8001
