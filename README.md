@@ -29,4 +29,4 @@ docker-compose up
 
 - in this version of our project the database is populated with random data (not all databse is populated - for testing purposes only)
 <br/><br/>
--the GraphQl is going to be connected to router which will provide data exchange beetween other parts of our information system (see https://github.com/naxit-01/Bzatek-Nemec-2021)
+- the GraphQl is going to be connected to router which will provide data exchange beetween other parts of our information system (see https://github.com/naxit-01/Bzatek-Nemec-2021)
